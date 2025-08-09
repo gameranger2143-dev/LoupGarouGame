@@ -1,0 +1,33 @@
+name: Build EXE
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build EXE
+        run: |
+          npm install -g pkg
+          pkg server.js --targets node18-win-x64 --output loup-garou.exe
+
+      - name: Upload EXE artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: loup-garou
+          path: loup-garou.exe
